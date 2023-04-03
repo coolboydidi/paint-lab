@@ -45,12 +45,12 @@ public class PaintDemo {
             super.paintComponent(g);
 
             g.setColor(Color.BLACK);
-            g.drawRect(50, 50, 100, 50);
-            g.drawOval(200, 300, 50, 50);
+            g.drawRect(100, 150, 300, 300);
+            g.drawOval(30, 30, 50, 50);
+            g.drawArc(100, 50, 300, 200, 0, 180);
 
             g.setColor(Color.RED);
-            g.fillRect(50, 300, 50, 50);
-            g.fillOval(200, 50, 50, 100);
+            g.fillRect(225, 350, 50, 100);
         }
     }
 }

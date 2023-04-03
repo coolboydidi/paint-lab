@@ -45,6 +45,11 @@ public class PaintProgram implements ActionListener {
         if (ae.getActionCommand().equals("Pencil")) {
             dPanel.setMode("Pencil");
         }
+        if (ae.getActionCommand().equals("Eraser")) {
+            dPanel.setColor(Color.WHITE);
+            dPanel.setMode("Eraser");
+
+        }
     }
 
     // Main method just creates a PaintProgram object
@@ -147,6 +152,18 @@ public class PaintProgram implements ActionListener {
                     e.getY() >= 0 && e.getY() < HEIGHT) {
                     // Set current pixel as painted
                     isPainted[e.getX()][e.getY()] = true;
+                }
+            }
+            if (mode.equals("Eraser")) {
+                if (e.getX() >= 0 && e.getX() < WIDTH &&
+                        e.getY() >= 0 && e.getY() < HEIGHT) {
+                    for(int i = e.getX() - 2; i <= e.getX()+ 2; i++){
+                        for(int j = e.getY() - 2; j <= e.getY() + 2; j++) {
+                            isPainted[i][j] = false;
+                        }
+                    }
+
+
                 }
             }
 
