@@ -32,6 +32,53 @@ public class PaintProgram implements ActionListener {
         eraserButton.addActionListener(this);
         buttonPanel.add(eraserButton);
 
+        JPanel colorPanel = new JPanel();
+        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.PAGE_AXIS));
+        frame.add(colorPanel, BorderLayout.EAST);
+
+        JButton blackButton = new JButton("Black");
+        blackButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (blackButton.getActionCommand().equals("Black")){
+                    dPanel.setColor(Color.BLACK);
+                }
+            }
+        });
+        colorPanel.add(blackButton);
+
+        JButton blueButton = new JButton("Blue");
+        blueButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (blueButton.getActionCommand().equals("Blue")){
+                    dPanel.setColor(Color.BLUE);
+                }
+            }
+        });
+        colorPanel.add(blueButton);
+
+        JButton redButton = new JButton("Red");
+        redButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (redButton.getActionCommand().equals("Red")) {
+                    dPanel.setColor(Color.RED);
+                }
+            }
+        });
+        colorPanel.add(redButton);
+
+        JButton greenButton = new JButton("Green");
+        greenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (greenButton.getActionCommand().equals("Green")) {
+                    dPanel.setColor(Color.GREEN);
+                }
+            }
+        });
+        colorPanel.add(greenButton);
         // Set the size and set the visibility
         frame.pack();
         frame.setVisible(true);
@@ -46,7 +93,6 @@ public class PaintProgram implements ActionListener {
             dPanel.setMode("Pencil");
         }
         if (ae.getActionCommand().equals("Eraser")) {
-            dPanel.setColor(Color.WHITE);
             dPanel.setMode("Eraser");
 
         }
@@ -132,7 +178,9 @@ public class PaintProgram implements ActionListener {
             for (int x = 0; x < WIDTH; x++) {
                 for (int y = 0; y < HEIGHT; y++) {
                     if (isPainted[x][y]) {
+                        g.setColor(colors[x][y]);
                         g.drawRect(x, y, 1, 1);
+
                     }
                 }
             }
@@ -142,17 +190,23 @@ public class PaintProgram implements ActionListener {
         // This is the method that is called when the mouse
         // is pressed. This is where most of your code will go
         // ** Code to be edited in Part B **
+        public void pencilMethod(MouseEvent e) {
+            if (e.getX() >= 0 && e.getX() < WIDTH &&
+                    e.getY() >= 0 && e.getY() < HEIGHT) {
+                // Set current pixel as painted
+                colors[e.getX()][e.getY()] = this.color;
+                isPainted[e.getX()][e.getY()] = true;
+
+            }
+        }
+
         public void mousePressed(MouseEvent e) {
             // Check the current mode
             // * If "pencil" mode, we should mark the current
             //   pixel as painted
             if (mode.equals("Pencil")) {
                 // Check that mouse is in bounds of panel
-                if (e.getX() >= 0 && e.getX() < WIDTH &&
-                    e.getY() >= 0 && e.getY() < HEIGHT) {
-                    // Set current pixel as painted
-                    isPainted[e.getX()][e.getY()] = true;
-                }
+                pencilMethod(e);
             }
             if (mode.equals("Eraser")) {
                 if (e.getX() >= 0 && e.getX() < WIDTH &&
@@ -160,11 +214,13 @@ public class PaintProgram implements ActionListener {
                     for(int i = e.getX() - 2; i <= e.getX()+ 2; i++){
                         for(int j = e.getY() - 2; j <= e.getY() + 2; j++) {
                             isPainted[i][j] = false;
+
                         }
                     }
 
-
                 }
+
+
             }
 
             // We need to manually tell the panel to repaint
