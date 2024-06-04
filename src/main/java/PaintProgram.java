@@ -8,6 +8,7 @@ public class PaintProgram implements ActionListener {
     JPanel buttonPanel;
     JButton pencilButton, eraserButton;
 
+
     // This is the PaintProgram constructor which sets up the JFrame
     // and all other components and containers
     // ** Code to be edited in Part C **
@@ -31,6 +32,23 @@ public class PaintProgram implements ActionListener {
         eraserButton = new JButton("Eraser");
         eraserButton.addActionListener(this);
         buttonPanel.add(eraserButton);
+
+        JButton sprayButton = new JButton("Spray");
+        sprayButton.addActionListener(this);
+        buttonPanel.add(sprayButton);
+
+
+
+        JButton clearButton = new JButton("Clear");
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (clearButton.getActionCommand().equals("Clear")) {
+                    dPanel.clearButtonfunction();
+                }
+            }
+        });
+        buttonPanel.add(clearButton);
 
         JPanel colorPanel = new JPanel();
         colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.PAGE_AXIS));
@@ -78,7 +96,55 @@ public class PaintProgram implements ActionListener {
                 }
             }
         });
+
         colorPanel.add(greenButton);
+
+        JButton libraryButton = new JButton("Library");
+        libraryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color selectedColor = JColorChooser.showDialog(null, "Choose a Color", Color.BLACK);
+                if (selectedColor != null) {
+                    dPanel.setColor(selectedColor);
+                }
+            }
+        });
+        colorPanel.add(libraryButton);
+
+        JButton pickButton = new JButton("Pick");
+        pickButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dPanel.setMode(dPanel.mode+"Pick");
+
+            }
+        });
+        colorPanel.add(pickButton);
+
+        JPanel markerPanel = new JPanel();
+        markerPanel.setLayout(new BoxLayout(markerPanel, BoxLayout.PAGE_AXIS));
+        frame.add(markerPanel, BorderLayout.WEST);
+
+        JButton markerButton = new JButton("Marker");
+        markerButton.addActionListener(this);
+        markerPanel.add(markerButton);
+
+        JButton markerShape1 = new JButton("Shape 1");
+        markerShape1.addActionListener(this);
+        markerPanel.add(markerShape1);
+
+        JButton markerShape2 = new JButton("Shape 2");
+        markerShape2.addActionListener(this);
+        markerPanel.add(markerShape2);
+
+        JButton markerShape3 = new JButton("Shape 3");
+        markerShape3.addActionListener(this);
+        markerPanel.add(markerShape3);
+
+        JButton markerShape4 = new JButton("Shape 4");
+        markerShape4.addActionListener(this);
+        markerPanel.add(markerShape4);
+
         // Set the size and set the visibility
         frame.pack();
         frame.setVisible(true);
@@ -94,7 +160,28 @@ public class PaintProgram implements ActionListener {
         }
         if (ae.getActionCommand().equals("Eraser")) {
             dPanel.setMode("Eraser");
-
+        }
+        if (ae.getActionCommand().equals("Spray")) {
+            dPanel.setMode("Spray");
+        }
+        if (ae.getActionCommand().equals("Marker")) {
+            dPanel.setMode("Marker");
+        }
+        if (dPanel.mode.equals("Marker") && ae.getActionCommand().equals("Shape 1") ||
+                dPanel.mode.indexOf("Shape") > -1 && ae.getActionCommand().equals("Shape 1")) {
+            dPanel.setMode("Shape 1");
+        }
+        if (dPanel.mode.equals("Marker") && ae.getActionCommand().equals("Shape 2") ||
+                dPanel.mode.indexOf("Shape") > -1 && ae.getActionCommand().equals("Shape 2")) {
+            dPanel.setMode("Shape 2");
+        }
+        if (dPanel.mode.equals("Marker") && ae.getActionCommand().equals("Shape 3") ||
+                dPanel.mode.indexOf("Shape") > -1 && ae.getActionCommand().equals("Shape 3")) {
+            dPanel.setMode("Shape 3");
+        }
+        if (dPanel.mode.equals("Marker") && ae.getActionCommand().equals("Shape 4") ||
+                dPanel.mode.indexOf("Shape") > -1 && ae.getActionCommand().equals("Shape 4")) {
+            dPanel.setMode("Shape 4");
         }
     }
 
@@ -139,6 +226,7 @@ public class PaintProgram implements ActionListener {
             addMouseListener(this);
             addMouseMotionListener(this);
 
+
             // Initialize instance variables
             isPainted = new boolean[WIDTH][HEIGHT];
             colors = new Color[WIDTH][HEIGHT];
@@ -146,6 +234,15 @@ public class PaintProgram implements ActionListener {
             color = Color.BLACK;
         }
 
+        public void clearButtonfunction() {
+            for (int x = 0; x < WIDTH; x++) {
+                for (int y = 0; y < HEIGHT; y++) {
+                    isPainted[x][y] = false;
+                    colors[x][y] = Color.WHITE;
+                }
+            }
+            repaint();
+        }
         // Can be called to change the current mode
         // of the drawing panel
         // ** You should never need to edit this code **
@@ -200,6 +297,7 @@ public class PaintProgram implements ActionListener {
             }
         }
 
+
         public void mousePressed(MouseEvent e) {
             // Check the current mode
             // * If "pencil" mode, we should mark the current
@@ -209,8 +307,8 @@ public class PaintProgram implements ActionListener {
                 pencilMethod(e);
             }
             if (mode.equals("Eraser")) {
-                if (e.getX() >= 0 && e.getX() < WIDTH &&
-                        e.getY() >= 0 && e.getY() < HEIGHT) {
+                if (e.getX()-2 > 0 && e.getX()+2 < WIDTH &&
+                        e.getY()-2 > 0 && e.getY()+2 < HEIGHT) {
                     for(int i = e.getX() - 2; i <= e.getX()+ 2; i++){
                         for(int j = e.getY() - 2; j <= e.getY() + 2; j++) {
                             isPainted[i][j] = false;
@@ -219,9 +317,78 @@ public class PaintProgram implements ActionListener {
                     }
 
                 }
+}
+            if(mode.equals("Spray")) {
+                if (e.getX()-10 >= 0 && e.getX()+10 < WIDTH &&
+                        e.getY()-10 >= 0 && e.getY()+10 < HEIGHT) {
+                    for (int i = e.getX() - 10; i <= e.getX() + 10; i++) {
+                        for (int j = e.getY() - 10; j <= e.getY() + 10; j++) {
+                            int randomizer = (int)(Math.random()*100);
+                            if (randomizer > 90) {
+                                isPainted[i][j] = true;
+                                colors[i][j] = this.color;
+                            }
 
-
+                        }
+                    }
+                }
             }
+
+            if(mode.equals("Shape 1")) {
+                if (e.getX()-1 >= 0 && e.getX()+1 < WIDTH &&
+                        e.getY()-10 >= 0 && e.getY()+10 < HEIGHT) {
+                    for (int i = e.getX() - 1; i <= e.getX() + 1; i++) {
+                        for (int j = e.getY() - 10; j <= e.getY() + 10; j++) {
+                                isPainted[i][j] = true;
+                                colors[i][j] = this.color;
+                                //colors[i-1][j] = this.color;
+                                //colors[i][j] = Color.ORANGE;
+                            }
+
+                        }
+                    }
+                }
+            if(mode.equals("Shape 2")){
+                int x = e.getX();
+                if (e.getX()-1 >= 0 && e.getX()+22 < WIDTH &&
+                    e.getY()-10 >= 0 && e.getY()+10 < HEIGHT) {
+                    for (int j = e.getY() - 10; j <= e.getY() + 10; j++) {
+                        x++;
+                        isPainted[x][j] = true;
+                        colors[x][j] = this.color;
+                    }
+
+                }
+            }
+            if(mode.equals("Shape 3")) {
+                if (e.getX()-10 >= 0 && e.getX()+10 < WIDTH &&
+                        e.getY()-1 >= 0 && e.getY()+1 < HEIGHT) {
+                    for (int i = e.getX() - 10; i <= e.getX() + 10; i++) {
+                        for (int j = e.getY() - 1; j <= e.getY() + 1; j++) {
+                            isPainted[i][j] = true;
+                            colors[i][j] = this.color;
+                        }
+
+                    }
+                }
+            }
+            if (mode.equals("Shape 4")) {
+                if (e.getX()-4 >= 0 && e.getX()+4 < WIDTH &&
+                        e.getY()-4 >= 0 && e.getY()+4 < HEIGHT) {
+                    for (int i = e.getX() - 4; i <= e.getX() + 4; i++) {
+                        for (int j = e.getY() - 4; j <= e.getY() + 4; j++) {
+                            isPainted[i][j] = true;
+                            colors[i][j] = this.color;
+                        }
+
+                    }
+                }
+            }
+            if (mode.indexOf("Pick") > -1) {
+                color = colors[e.getX()][e.getY()];
+                setMode(mode.substring(0,mode.indexOf("Pick") - 1));
+            }
+
 
             // We need to manually tell the panel to repaint
             // and call the paintComponent method
